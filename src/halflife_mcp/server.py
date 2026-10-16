@@ -63,8 +63,9 @@ def create_server(get_store: Callable[[], Store]) -> MCPServer:
 
     @mcp.tool(annotations=ro)
     def memory_brief(scope: str | None = None) -> dict[str, Any]:
-        """What to know before starting work: all active preferences and procedures, the
-        strongest facts, and the most recent episodes for this scope (plus global)."""
+        """What to know before starting work: the top preferences (up to 8) and procedures
+        (6), the strongest facts (5) and the most recent episodes (3) for this scope (plus
+        global). Bodies are clipped; use memory_get for a full memory."""
         return _recall.brief(get_store(), scope)
 
     @mcp.tool(annotations=ro)

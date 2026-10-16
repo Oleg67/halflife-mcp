@@ -468,7 +468,8 @@ class Store:
                 return dict(res, action="reinforced", overlap=round(best_ov, 2))
         base = memfile.slugify(name or description)
         nm, i = base, 2
-        while os.path.exists(os.path.join(self.root, sd, nm + ".md")):
+        while (os.path.exists(os.path.join(self.root, sd, nm + ".md")) or
+               os.path.exists(os.path.join(self.root, sd, "_archive", nm + ".md"))):
             nm, i = f"{base}-{i}", i + 1
         rec = {"id": f"{sd}/{nm}", "scope": key, "scope_dir": sd, "kind": kind, "name": nm,
                "description": description, "body": content,
@@ -505,11 +506,14 @@ class Store:
     def _archive(self, rec: dict) -> None:
         adir = os.path.join(self.root, rec["scope_dir"], "_archive")
         os.makedirs(adir, exist_ok=True)
-        shutil.move(rec["path"], os.path.join(adir, rec["name"] + ".md"))
+        name, i = rec["name"], 2                     # never overwrite an archived memory
+        while os.path.exists(os.path.join(adir, name + ".md")):
+            name, i = f"{rec['name']}-{i}", i + 1
+        shutil.move(rec["path"], os.path.join(adir, name + ".md"))
         side = self._sidecar(rec["scope_dir"], rec["name"])
         if os.path.exists(side):
             os.makedirs(os.path.join(adir, "_graph"), exist_ok=True)
-            shutil.move(side, os.path.join(adir, "_graph", rec["name"] + ".json"))
+            shutil.move(side, os.path.join(adir, "_graph", name + ".json"))
         self._unindex(rec["id"])
 
     def reinforce(self, mem_id: str, graph: dict | None = None) -> dict:
@@ -604,7 +608,7 @@ class Store:
 
 
 def _named_in(norm: str, low: str, toks: set[str]) -> bool:
-    if len(norm) < 3:
+    if len(norm) < 2:
         return False
     if any(c in norm for c in " /._-"):
         return norm in low

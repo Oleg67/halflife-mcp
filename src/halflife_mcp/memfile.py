@@ -39,8 +39,16 @@ SECRET_PATTERNS = [
     re.compile(r"\b(?:ghp|gho|ghs|ghu|github_pat|glpat|xox[abprs]|npm|pypi)[-_][\w-]{16,}"),
     re.compile(r"\bAKIA[0-9A-Z]{16}\b"),
     re.compile(r"\bAIza[\w-]{30,}"),
-    re.compile(r"(?i)\b[\w.-]*" + _SECRET_WORDS + r"[\w.-]*[\"']?\s*[:=]\s*[\"']?[^\s\"',;]{6,}"),
 ]
+# "<name with a secret word> = <value>": refused only when the value itself looks secret.
+_ASSIGNMENT = re.compile(r"(?i)\b[\w.-]*" + _SECRET_WORDS + r"[\w.-]*[\"']?\s*[:=]\s*[\"']?([^\s\"',;]{6,})")
+
+
+def _secret_value(v: str) -> bool:
+    """Not an env-var reference, URL or plain number; mixed letters and digits, or long."""
+    if v.startswith("$") or "://" in v or v.isdigit():
+        return False
+    return any(c.isdigit() for c in v) or len(v) >= 16
 
 
 def find_secret(text: str) -> str | None:
@@ -48,6 +56,9 @@ def find_secret(text: str) -> str | None:
     for rx in SECRET_PATTERNS:
         m = rx.search(text)
         if m:
+            return m.group(0)[:12] + "…"
+    for m in _ASSIGNMENT.finditer(text):
+        if _secret_value(m.group(1)):
             return m.group(0)[:12] + "…"
     return None
 

@@ -337,3 +337,39 @@ def test_http_mode_refuses_non_loopback_without_flag(capsys):
     assert not _is_loopback("0.0.0.0") and not _is_loopback("192.168.1.5")
     assert main(["serve", "--http", "--host", "0.0.0.0"]) == 2
     assert "no authentication" in capsys.readouterr().err
+
+
+def test_two_letter_terms_are_searchable(store):
+    store.remember("preference", "Use uv, not pip, for Python environments.")
+    assert [h["id"] for h in recall(store, "uv or pip?")] == ["global/use-uv-not-pip-for-python-environments"]
+
+
+@pytest.mark.parametrize("note", [
+    "In CI, GITHUB_TOKEN: provided automatically by GitHub Actions.",
+    "Run the eval with --api-key=$OPENAI_API_KEY from .env.local.",
+    "Set max_tokens = 100000 for long outputs.",
+    "The CSRF cookie: SameSite=Lax broke the login redirect.",
+    "OAuth token_endpoint: https://auth.example.com/oauth/token"])
+def test_harmless_notes_about_secrets_are_stored(store, note):
+    assert store.remember("fact", note)["action"] == "created"
+
+
+def test_new_memory_does_not_reuse_an_archived_name(store):
+    old = store.remember("procedural", "Deploy the service with make deploy.", name="deploy")
+    store.remember("procedural", "Release by pushing a version tag; CI releases.",
+                   contradicts=old["id"])
+    new = store.remember("fact", "Production deploys need an approved change ticket.", name="deploy")
+    assert new["id"] != old["id"]
+    store.forget(new["id"])
+    assert files(store, "global/_archive") == ["deploy.md"]
+
+
+def test_archiving_never_overwrites_an_archived_memory(store):
+    a = store.remember("fact", "first claim about the build cache", name="cache")
+    store.remember("fact", "replacement one for the cache claim", contradicts=a["id"])
+    path = os.path.join(store.root, "global", "cache.md")
+    with open(path, "w", encoding="utf-8") as fh:        # a hand-made file reusing the name
+        fh.write("---\nname: cache\ndescription: \"second claim\"\nmetadata:\n  tier: semantic\n---\n\nbody\n")
+    store.sync()
+    store.remember("fact", "replacement two for the cache claim", contradicts="global/cache")
+    assert files(store, "global/_archive") == ["cache-2.md", "cache.md"]

@@ -41,6 +41,7 @@ will would can could should what when where which who whom why how all any each 
 about after before again also just like make made more most much only other our out over same
 such than then them they their there here its it's let lets please now new use used using via
 want need get got does did done doing yes okay sure thanks thank check look see show tell give
+an as at be by do go if in is it me my no of on or so to up us we
 """.split())
 
 
@@ -49,7 +50,7 @@ def _stem(t: str) -> str:
 
 
 def terms(text: str) -> list[str]:
-    return [_stem(t) for t in re.findall(r"[a-z0-9]{3,}", text.lower()) if t not in STOPWORDS]
+    return [_stem(t) for t in re.findall(r"[a-z0-9]{2,}", text.lower()) if t not in STOPWORDS]
 
 
 def _scopes(scope: str | None) -> list[str]:

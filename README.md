@@ -80,7 +80,7 @@ automatically.
 
 | Tool | What it does |
 |---|---|
-| `memory_brief(scope?)` | Start-of-task pack: all preferences and procedures, the strongest facts, recent episodes |
+| `memory_brief(scope?)` | Start-of-task pack: top preferences and procedures, the strongest facts, recent episodes (capped at 8/6/5/3) |
 | `memory_recall(query, scope?, k?, kinds?)` | Hybrid search: keyword + vector + graph, fused by reciprocal-rank fusion. Read-only |
 | `memory_remember(kind, content, scope?, description?, provisional?, contradicts?, entities?, relations?, source?)` | Store a memory; a near-duplicate reinforces the existing one instead |
 | `memory_reinforce(id)` | A memory was confirmed or useful: confidence up, decay reset, provisional → active |
