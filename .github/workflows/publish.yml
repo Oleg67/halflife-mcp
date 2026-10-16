@@ -1,0 +1,36 @@
+# Publishes to PyPI when a GitHub release is published, using PyPI trusted publishing
+# (OIDC): no API token is stored in GitHub. The PyPI project must list this repository,
+# this workflow file and the `pypi` environment as a trusted publisher.
+name: Publish to PyPI
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+      - run: uv run --isolated --no-project --with-editable . --with pytest --with anyio python -m pytest -q
+
+  publish:
+    needs: test
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    environment:
+      name: pypi
+      url: https://pypi.org/project/halflife-mcp/
+    permissions:
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+      - name: Check the release tag matches the package version
+        run: |
+          version=$(grep -m1 '^version = ' pyproject.toml | cut -d'"' -f2)
+          test "${GITHUB_REF_NAME#v}" = "$version" || { echo "tag $GITHUB_REF_NAME != version $version"; exit 1; }
+      - run: uv build
+      - run: uv publish --trusted-publishing always

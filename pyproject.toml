@@ -1,0 +1,31 @@
+[project]
+name = "halflife-mcp"
+version = "0.1.0"
+description = "Local long-term memory for AI agents as an MCP server: procedural, preference, fact, episodic and trace memories in Markdown files + a SQLite index (keyword, optional vector, graph)."
+readme = "README.md"
+license = "Apache-2.0"
+requires-python = ">=3.10"
+dependencies = ["mcp>=2.3,<3"]
+
+[project.urls]
+Homepage = "https://github.com/Oleg67/halflife-mcp"
+Issues = "https://github.com/Oleg67/halflife-mcp/issues"
+
+[project.optional-dependencies]
+vector = ["fastembed>=0.4", "numpy>=1.24"]
+
+[project.scripts]
+halflife-mcp = "halflife_mcp.server:main"
+
+[dependency-groups]
+dev = ["pytest>=8", "anyio>=4"]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/halflife_mcp"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
