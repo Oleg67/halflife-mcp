@@ -1,6 +1,6 @@
 [project]
 name = "halflife-mcp"
-version = "0.1.1"
+version = "0.1.2"
 description = "Local long-term memory for AI agents as an MCP server: procedural, preference, fact, episodic and trace memories in Markdown files + a SQLite index (keyword, optional vector, graph)."
 readme = "README.md"
 license = "Apache-2.0"

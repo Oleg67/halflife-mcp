@@ -60,6 +60,17 @@ def create_server(get_store: Callable[[], Store]) -> MCPServer:
     mcp = MCPServer("halflife", instructions=INSTRUCTIONS)
     ro = ToolAnnotations(read_only_hint=True, open_world_hint=False)
     write = ToolAnnotations(read_only_hint=False, destructive_hint=False, open_world_hint=False)
+    maintained = False
+
+    def write_store() -> Store:
+        """The store for write tools. The first write runs maintenance (archive faded
+        memories, expire old traces), so read tools never move or delete memory files."""
+        nonlocal maintained
+        store = get_store()
+        if not maintained:
+            store.maintain()
+            maintained = True
+        return store
 
     @mcp.tool(annotations=ro)
     def memory_brief(scope: str | None = None) -> dict[str, Any]:
@@ -97,22 +108,22 @@ def create_server(get_store: Callable[[], Store]) -> MCPServer:
         configures, fixed, caused, contradicts, supersedes, related_to, owns, prefers).
         source: where it came from (URL, file path). A near-duplicate reinforces the
         existing memory instead of creating a new one."""
-        return get_store().remember(kind, content, scope, description, name, confidence,
-                                    provisional, contradicts, entities, relations, source)
+        return write_store().remember(kind, content, scope, description, name, confidence,
+                                      provisional, contradicts, entities, relations, source)
 
     @mcp.tool(annotations=ToolAnnotations(read_only_hint=False, destructive_hint=False,
                                           idempotent_hint=False, open_world_hint=False))
     def memory_reinforce(id: str) -> dict[str, Any]:
         """A memory was confirmed or proved useful: raises its confidence, resets its decay
         and activates it if provisional."""
-        return get_store().reinforce(id)
+        return write_store().reinforce(id)
 
     @mcp.tool(annotations=ToolAnnotations(read_only_hint=False, destructive_hint=True,
                                           open_world_hint=False))
     def memory_forget(id: str) -> dict[str, Any]:
         """Permanently delete a memory (file, graph, archived copy, index). Only when the user
         asks to forget something."""
-        return get_store().forget(id)
+        return write_store().forget(id)
 
     @mcp.tool(annotations=ro)
     def memory_get(id: str) -> dict[str, Any]:
@@ -165,7 +176,6 @@ def get_store() -> Store:
     global _STORE
     if _STORE is None:
         _STORE = Store()
-        _STORE.maintain()
         _STORE.sync()
     return _STORE
 

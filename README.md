@@ -69,7 +69,7 @@ semantic matching (finding "k8s workloads" from a memory about "the kubernetes c
 the `vector` extra:
 
 ```json
-"args": ["--from", "halflife-mcp[vector]", "halflife-mcp"]
+"args": ["--with", "fastembed>=0.4", "--with", "numpy>=1.24", "halflife-mcp"]
 ```
 
 This adds fastembed (ONNX, CPU only). The first start downloads a 65 MB model

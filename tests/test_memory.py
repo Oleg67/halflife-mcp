@@ -325,6 +325,30 @@ async def test_mcp_tools_end_to_end(tmp_path):
         assert lst.structured_content["count"] == 0
 
 
+@pytest.mark.anyio
+async def test_mcp_read_tools_never_run_maintenance(tmp_path):
+    from mcp import Client
+
+    from halflife_mcp.server import create_server
+
+    st = Store(str(tmp_path), embedder=None)
+    t = st.remember("trace", "ran pytest tests/test_login.py: 3 failed")
+    p = os.path.join(st.root, t["id"] + ".md")
+    old = (date.today() - timedelta(days=400)).isoformat()
+    text = open(p).read()
+    open(p, "w").write(text.replace(date.today().isoformat(), old))
+    async with Client(create_server(lambda: st)) as client:
+        for tool, args in (("memory_brief", {}), ("memory_recall", {"query": "pytest"}),
+                           ("memory_list", {}), ("memory_stats", {}),
+                           ("memory_get", {"id": t["id"]})):
+            assert not (await client.call_tool(tool, args)).is_error
+        assert os.path.exists(p)
+        r = await client.call_tool("memory_remember", {"kind": "fact",
+                                                       "content": "the CI runner is ubuntu"})
+        assert not r.is_error, r.content
+        assert not os.path.exists(p)
+
+
 @pytest.fixture
 def anyio_backend():
     return "asyncio"
