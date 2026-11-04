@@ -66,7 +66,8 @@ def test_unknown_kind_empty_and_long_rejected(store):
 @pytest.mark.parametrize("secret", [
     "api_key=abcdef123456", "Authorization: Bearer abcdefghijklmnopqrstu",
     "token: sk-proj-abcdefghijklmnopqrstuv", "https://bob:hunter2@example.com/x",
-    "-----BEGIN RSA PRIVATE KEY-----", "AKIAABCDEFGHIJKLMNOP", "password: hunter22"])
+    "-----BEGIN RSA PRIVATE KEY-----", "AKIAABCDEFGHIJKLMNOP", "password: hunter22",
+    "npm_" + "a1B2c3D4e5" * 3 + "F6g7H8", "pypi-AgEIcHlwaS5vcmc" + "Ab1-_" * 12])
 def test_secrets_refused_everywhere(store, secret):
     with pytest.raises(MemoryError_, match="secret"):
         store.remember("fact", f"note {secret}")
@@ -373,7 +374,10 @@ def test_two_letter_terms_are_searchable(store):
     "Run the eval with --api-key=$OPENAI_API_KEY from .env.local.",
     "Set max_tokens = 100000 for long outputs.",
     "The CSRF cookie: SameSite=Lax broke the login redirect.",
-    "OAuth token_endpoint: https://auth.example.com/oauth/token"])
+    "OAuth token_endpoint: https://auth.example.com/oauth/token",
+    "set npm_config_legacy_peer_deps=true for installs",
+    "run npm-check-updates-globally before a release",
+    "publish with pypi-upload-workflow-from-ci"])
 def test_harmless_notes_about_secrets_are_stored(store, note):
     assert store.remember("fact", note)["action"] == "created"
 

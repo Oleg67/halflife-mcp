@@ -36,7 +36,9 @@ SECRET_PATTERNS = [
     re.compile(r"://[^/\s:@]+:[^/\s@]+@"),                                 # user:pass@host
     re.compile(r"\beyJ[\w-]{5,}\.[\w-]{5,}\.[\w-]{5,}"),                   # JWT
     re.compile(r"\b(?:sk|pk|rk)-[\w-]{16,}"),
-    re.compile(r"\b(?:ghp|gho|ghs|ghu|github_pat|glpat|xox[abprs]|npm|pypi)[-_][\w-]{16,}"),
+    re.compile(r"\b(?:ghp|gho|ghs|ghu|github_pat|glpat|xox[abprs])[-_][\w-]{16,}"),
+    re.compile(r"\bnpm_[A-Za-z0-9]{36}\b"),                                # npm access token
+    re.compile(r"\bpypi-AgEIcHlwaS5vcmc[\w-]{16,}"),                       # PyPI API token
     re.compile(r"\bAKIA[0-9A-Z]{16}\b"),
     re.compile(r"\bAIza[\w-]{30,}"),
 ]
