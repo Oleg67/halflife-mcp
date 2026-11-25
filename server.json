@@ -1,0 +1,36 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.Oleg67/halflife-mcp",
+  "description": "Local long-term memory for AI agents: Markdown files, SQLite index, half-life decay.",
+  "repository": {
+    "url": "https://github.com/Oleg67/halflife-mcp",
+    "source": "github"
+  },
+  "version": "0.1.4",
+  "packages": [
+    {
+      "registryType": "pypi",
+      "identifier": "halflife-mcp",
+      "version": "0.1.4",
+      "transport": {
+        "type": "stdio"
+      },
+      "environmentVariables": [
+        {
+          "name": "HALFLIFE_HOME",
+          "description": "Data directory (default: per-OS user data path)",
+          "isRequired": false,
+          "isSecret": false,
+          "format": "string"
+        },
+        {
+          "name": "HALFLIFE_EMBED",
+          "description": "Set to off to disable vector search",
+          "isRequired": false,
+          "isSecret": false,
+          "format": "string"
+        }
+      ]
+    }
+  ]
+}

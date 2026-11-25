@@ -4,6 +4,8 @@
 [![Python](https://img.shields.io/pypi/pyversions/halflife-mcp)](https://pypi.org/project/halflife-mcp/)
 [![License](https://img.shields.io/github/license/Oleg67/halflife-mcp)](LICENSE)
 
+<!-- mcp-name: io.github.Oleg67/halflife-mcp -->
+
 **Agent memory that forgets on purpose.** Memories fade unless used, inferences stay provisional
 until confirmed, and corrections supersede instead of overwriting, all in plain Markdown files
 on your own machine.
