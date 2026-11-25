@@ -1,5 +1,15 @@
 # halflife-mcp
 
+[![PyPI](https://img.shields.io/pypi/v/halflife-mcp)](https://pypi.org/project/halflife-mcp/)
+[![Python](https://img.shields.io/pypi/pyversions/halflife-mcp)](https://pypi.org/project/halflife-mcp/)
+[![License](https://img.shields.io/github/license/Oleg67/halflife-mcp)](LICENSE)
+
+**Agent memory that forgets on purpose.** Memories fade unless used, inferences stay provisional
+until confirmed, and corrections supersede instead of overwriting, all in plain Markdown files
+on your own machine.
+
+![A preference is stored, corrected, and the old version archived with a link to its replacement](https://raw.githubusercontent.com/Oleg67/halflife-mcp/main/assets/demo.gif)
+
 Local long-term memory for AI agents, served over MCP. It runs on your own laptop: no account,
 no cloud service, no telemetry. Works with any MCP client that can launch a stdio server, such as
 Claude Code, Claude Desktop, Cursor, Zed or VS Code.

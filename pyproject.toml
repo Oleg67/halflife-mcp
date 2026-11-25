@@ -6,10 +6,28 @@ readme = "README.md"
 license = "Apache-2.0"
 requires-python = ">=3.10"
 dependencies = ["mcp>=2.3,<3"]
+keywords = ["mcp", "mcp-server", "model-context-protocol", "ai-agents", "agent-memory",
+            "long-term-memory", "claude-code", "local-first", "sqlite", "markdown"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+]
 
 [project.urls]
 Homepage = "https://github.com/Oleg67/halflife-mcp"
+Documentation = "https://github.com/Oleg67/halflife-mcp#readme"
+Source = "https://github.com/Oleg67/halflife-mcp"
 Issues = "https://github.com/Oleg67/halflife-mcp/issues"
+Releases = "https://github.com/Oleg67/halflife-mcp/releases"
 
 [project.optional-dependencies]
 vector = ["fastembed>=0.4", "numpy>=1.24"]
