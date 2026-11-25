@@ -3,6 +3,7 @@
 [![PyPI](https://img.shields.io/pypi/v/halflife-mcp)](https://pypi.org/project/halflife-mcp/)
 [![Python](https://img.shields.io/pypi/pyversions/halflife-mcp)](https://pypi.org/project/halflife-mcp/)
 [![License](https://img.shields.io/github/license/Oleg67/halflife-mcp)](LICENSE)
+[![Oleg67/halflife-mcp MCP server](https://glama.ai/mcp/servers/Oleg67/halflife-mcp/badges/score.svg)](https://glama.ai/mcp/servers/Oleg67/halflife-mcp)
 
 <!-- mcp-name: io.github.Oleg67/halflife-mcp -->
 
